@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas
+      id="myCanvas"
+      width="1000"
+      height="500"
+      style="border: 1px solid #000000"
+    >
+    </canvas>
+
+    <script>
+      let canvas = document.getElementById("myCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "blue";
+      ctx.fillRect(0, 0, 100, 100);
+
+      const getData = async () => {
+        function move(x, y) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillRect(x, y, 100, 100);
+        }
+
+        function printNumbers(number) {
+          console.log(number);
+        }
+        const importObject = {
+          console: { logNumbers: printNumbers },
+          commands: { control: move },
+        };
+
+        let response = await fetch("game.wasm");
+        let arrayBuffer = await response.arrayBuffer();
+        let wasm = await WebAssembly.instantiate(arrayBuffer, importObject);
+        let instance = wasm.instance.exports;
+        instance.moveLeft();
+        document.addEventListener("keydown", function (event) {
+          console.log(event);
+          if (event.key == "ArrowRight") {
+            instance.moveRight();
+          } else if (event.key == "ArrowLeft") {
+            instance.moveLeft();
+          } else if (event.key == "ArrowUp") {
+            instance.moveUp();
+          } else if (event.key == "ArrowDown") {
+            instance.moveDown();
+          }
+        });
+      };
+      getData();
+    </script>
+  </body>
+</html>
