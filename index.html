@@ -38,9 +38,9 @@
         let arrayBuffer = await response.arrayBuffer();
         let wasm = await WebAssembly.instantiate(arrayBuffer, importObject);
         let instance = wasm.instance.exports;
-        instance.moveLeft();
+        //instance.moveLeft();
         document.addEventListener("keydown", function (event) {
-          console.log(event);
+          console.log(instance);
           if (event.key == "ArrowRight") {
             instance.moveRight();
           } else if (event.key == "ArrowLeft") {
@@ -51,7 +51,26 @@
             instance.moveDown();
           }
         });
+
+        window.setInterval(() => {
+          if (instance.lastPositionFunction() == 6) {
+            instance.moveRight();
+          }
+          if (instance.lastPositionFunction() == 4) {
+            instance.moveLeft();
+          }
+
+          if (instance.lastPositionFunction() == 8) {
+            instance.moveUp();
+          }
+
+          if (instance.lastPositionFunction() == 2) {
+            instance.moveDown();
+          }
+          console.log(instance.lastPositionFunction());
+        }, 1000 / 2);
       };
+
       getData();
     </script>
   </body>

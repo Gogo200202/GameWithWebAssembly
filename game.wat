@@ -5,19 +5,27 @@
 (import "commands" "control" (func $move (param i32 i32)))
 (global $x (mut i32) (i32.const 100))
 (global $y (mut i32) (i32.const 0))
+;;8 up 2 donw  4 left 6 right
+(global $lastPosition (mut i32) (i32.const 0))
 (global $hund i32 (i32.const 100))
+
+
+(func $lastPositionFunction
+(result i32)
+(
+  i32.add(i32.const 0)(global.get $lastPosition)
+)
+)
+(export "lastPositionFunction" (func $lastPositionFunction))
 
 (func $moveRight
 (
-
-
-
-
-    
 ;;call $print_f64(global.get $x )
 
 drop(global.get $x)
 (global.set $x(i32.add(global.get $hund)(global.get $x)))
+
+(global.set $lastPosition (i32.const 6))
 (call $move(global.get $x)(global.get $y))
  ;;(drop)
 
@@ -31,6 +39,7 @@ drop(global.get $x)
 (
   drop(global.get $x)
 (global.set $x(i32.sub(global.get $x)(global.get $hund )))
+(global.set $lastPosition (i32.const 4))
 (call $move(global.get $x)(global.get $y))
 )
 )
@@ -40,6 +49,7 @@ drop(global.get $x)
 (
   drop(global.get $y)
 (global.set $y(i32.sub(global.get $y)(global.get $hund )))
+(global.set $lastPosition (i32.const 8))
 (call $move(global.get $x)( global.get $y))
 )
 )
@@ -49,6 +59,7 @@ drop(global.get $x)
 (
   drop(global.get $y)
 (global.set $y(i32.add(global.get $y)(global.get $hund )))
+(global.set $lastPosition (i32.const 2))
 (call $move(global.get $x)( global.get $y))
 )
 )
